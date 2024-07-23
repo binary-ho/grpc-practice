@@ -1,0 +1,47 @@
+syntax = "proto3";
+option go_package = "/auth";
+
+// Message -> 마샬 언마샬 대상이 되는 Object들
+message Token {
+  string value = 1;
+}
+
+message AuthData {
+  string name = 1;
+  Token token = 2;
+  int64 createDate = 3;
+  int64 expireDate = 4;
+}
+
+message Verify {
+  ResponseType status = 1;
+  AuthData auth = 2;
+}
+
+enum ResponseType {
+  SUCCESS = 0;
+  FAILED = 1;
+  EXPIRED_DATE = 2;
+}
+
+message CreateTokenRequest {
+  AuthData auth = 1;
+}
+
+message CreateTokenResponse {
+  AuthData auth = 1;
+}
+
+message VerifyTokenRequest {
+  Token token = 1;
+}
+
+message VerifyTokenResponse {
+  Verify verify = 1;
+}
+
+service AuthService {
+  // Remote Procedure 작성 (Server에 구현)
+  rpc CreateAuth(CreateTokenRequest) returns (CreateTokenResponse);
+  rpc VerifyAuth(VerifyTokenRequest) returns (VerifyTokenResponse);
+}
